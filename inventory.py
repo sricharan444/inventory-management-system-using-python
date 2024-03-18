@@ -1,45 +1,87 @@
 import json
-my_dict=[{"id":0,"name":"Biscuit","price":10,"quantity":100},{"id":7,"name":"Redbull","price":250,"quantity":200},{"id":1,"name":"choco","price":10,"quantity":100},{"id":8,"name":"TV","price":250,"quantity":200},{"id":2,"name":"tea","price":50,"quantity":200},{"id":9,"name":"AC","price":100,"quantity":100},{"id":3,"name":"coffee","price":250,"quantity":200},{"id":10,"name":"mobile","price":100,"quantity":100},{"id":4,"name":"dal","price":1250,"quantity":200},{"id":11,"name":"Laptop","price":100,"quantity":100},{"id":5,"name":"rice","price":4250,"quantity":200},{"id":12,"name":"tablet","price":100,"quantity":100}]
-
-def createInventory(my_dict):
+from collections import defaultdict
+d=defaultdict(int)
+def createInventory():
+    k=[]
+    n=int(input("how many types of products you want"))
+    for i in range(n):
+        d={}
+        d["id"]=int(input("enter the id of your product"))
+        d["name"]=input("enter name of the product")
+        d["price"]=input("enter the price of the product")
+        d["quantity"]=input("enter the quantity present in the inventory")
+        k.append(d)
     with open("ch.json", "w") as f:
-        json.dump(my_dict, f)
+        json.dump(k, f)
 
-def load(my_dict):
+
+def addItem():
+    k=defaultdict()
+    a=[]
+    n=int(input("enter how many items you need to add"))
+    for i in range(n):
+        with open("ch.json", "r") as f:
+            d = json.load(f)
+        k["id"]=int(input("enter the id of your product"))
+        k["name"]=input("enter name of the product")
+        k["price"]=input("enter the price of the product")
+        k["quantity"]=input("enter the quantity present in the inventory")
+        d.append(k)
+        with open("ch.json", "w") as f:
+            json.dump(d, f)
+
+
+def load():
     with open("ch.json", "r") as f:
-        my_dict = json.load(f)
-        print(my_dict)
-
-def addItem(d,my_dict):
-    my_dict.append(d)
-    createInventory(my_dict)
-
-def delItem(k):
-    for i in my_dict:
-        if i["id"]==k:
-            my_dict.remove(i)
-    createInventory(my_dict)
-
-def search(k):
-    for i in my_dict:
-        if i["id"]==k:
-            print(i)
-def updateDetails():
-    try:
-        a=input("enter the id of the item which you wanted to change")
-        k=input("enter the attribute name you want to change")
-        v=input("enter the value to be changed")
-        for i in my_dict:
-            if i["id"]==a:
-                i[k]=v
-    except:
-        print("enter correct data")
-def total_value(my_dict):
+        d = json.load(f)
+        return d
+    
+def total_value():
     count=0
-    for i in my_dict:
-        count+=i["quantity"]*i["price"]
+    with open("ch.json", "r") as f:
+        d = json.load(f)
+    for i in d:
+        count+=int(i["quantity"])*int(i["price"])
     print(count)
 
+
+def delItem():
+    k=int(input("enter the id of the product you want to delete from inventory"))
+    with open("ch.json", "r") as f:
+        d = json.load(f)
+    for i in d:
+        if i["id"]==k:
+            d.remove(i)
+    with open("ch.json", "w") as f:
+        json.dump(d, f)
+    
+
+def search():
+    with open("ch.json", "r") as f:
+        d = json.load(f)
+    print(d)
+    k=int(input("enter the id of the item which you want to search"))
+    for i in d:
+        if i["id"]==k:
+            return i
+    return "not found"
+def updateDetails():
+    try:
+        a=int(input("enter the id of the item which you wanted to change"))
+        k=input("enter the attribute name you want to change")
+        v=input("enter the value to be changed")
+        with open("ch.json", "r") as f:
+            d = json.load(f)
+        for i in d:
+            if i["id"]==a:
+                i[k]=v
+        with open("ch.json", "w") as f:
+            json.dump(d, f)
+        print("update sucessfull")
+        
+            
+    except:
+        print("enter correct data")
 
 
 
